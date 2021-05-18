@@ -44,18 +44,16 @@ express()
   .get('/likes/:id?', (req, res) => { res.send({ likes: Math.floor(Math.random()*2000 + 1)});})
 
   .post("/upload", multer({storage: multer.memoryStorage()}).single('avatar'), async function(req, res) {
-      const imgBuffer = req.file.buffer;
-      console.log(imgBuffer);
       const imgName = uuidv4();
-      db.none("INSERT INTO files(name, data) VALUES(${name}, ${data})", {name: imgName, data: imgBuffer});
+      db.none("INSERT INTO files(name, data) VALUES(${name}, encode(${data}, 'base64'))", {name: imgName, data: req.file.buffer});
       res.send({ imgUrl: 'uploads/' + imgName });
   })
     
   .get('/uploads/:upload', async function (req, res){
-    const data = await db.any("SELECT encode(data,'base64') AS encoded FROM files WHERE name = ${name}", {name: req.params.upload});
-    console.log(data[0].encoded);
-    res.writeHead(200, {'Content-Type': 'image/png', 'Content-Length': data[0].encoded.length });
-    res.end(data[0].encoded);
+    const data = await db.any("SELECT data FROM files WHERE name = ${name}", {name: req.params.upload});
+    console.log(data);
+    res.writeHead(200, {'Content-Type': 'image/png', 'Content-Length': data[0].data.length });
+    res.end(data[0].data);
   })
 
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
