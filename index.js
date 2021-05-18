@@ -53,13 +53,14 @@ express()
    res.send({ likes: Math.floor(Math.random()*2000 + 1)});
   })
 
-  .post("/upload", multer({storage:  multer.diskStorage({
-    destination: (req, file, cb) => cb(null, './uploads/'),
-    filename: (req, file, cb) => cb(null, uuidv4())
-  })}).single('avatar'), function(req, res) {
+  .post("/upload", 
+    multer({storage:  multer.diskStorage({
+      destination: (req, file, cb) => cb(null, './uploads/'),
+      filename: (req, file, cb) => cb(null, uuidv4())
+    })}).single('avatar'), function(req, res) {
       // res.redirect("/uploads/" + req.file.filename);
       console.log(req.file);
-      return res.status(200).end();
+      res.send({ imgUrl: req.file.path });
     })
     
     .get('/uploads/:upload', function (req, res){
