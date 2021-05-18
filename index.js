@@ -53,9 +53,9 @@ express()
     
   .get('/uploads/:upload', async function (req, res){
     const data = await db.any("SELECT encode(data,'base64') AS encoded FROM files WHERE name = ${name}", {name: req.params.upload});
-    console.log(data);
-    res.writeHead(200, {'Content-Type': 'image/png', 'Content-Length': data.length });
-    res.end(data.encoded);
+    console.log(data[0].encoded);
+    res.writeHead(200, {'Content-Type': 'image/png', 'Content-Length': data[0].encoded.length });
+    res.end(data[0].encoded);
   })
 
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
