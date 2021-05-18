@@ -44,14 +44,15 @@ express()
   .get('/likes/:id?', (req, res) => { res.send({ likes: Math.floor(Math.random()*2000 + 1)});})
 
   .post("/upload", multer({storage: multer.memoryStorage()}).single('avatar'), async function(req, res) {
-      const imgBuffer = req.file.buffer.toString('base64');
+      const imgBuffer = req.file.buffer;
+      console.log(imgBuffer);
       const imgName = uuidv4();
       db.none("INSERT INTO files(name, data) VALUES(${name}, ${data})", {name: imgName, data: imgBuffer});
       res.send({ imgUrl: 'uploads/'+imgName });
   })
     
   .get('/uploads/:upload', async function (req, res){
-    const data = await db.any("SELECT data FROM files where name = ${name}", {name: req.params.upload});
+    const data = await db.any("SELECT encode(data,'base64') FROM files where name = ${name}", {name: req.params.upload});
     res.writeHead(200, {'Content-Type': 'image/png' });
     res.end(data, 'binary');
   })
