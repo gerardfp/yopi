@@ -48,7 +48,7 @@ express()
       console.log(imgBuffer);
       const imgName = uuidv4();
       db.none("INSERT INTO files(name, data) VALUES(${name}, ${data})", {name: imgName, data: imgBuffer});
-      res.send({ imgUrl: 'uploads/'+imgName });
+      res.send({ imgUrl: 'uploads/' + imgName });
   })
     
   .get('/uploads/:upload', async function (req, res){
