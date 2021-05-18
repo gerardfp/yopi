@@ -45,7 +45,7 @@ express()
 
   .post("/upload", multer({storage: multer.memoryStorage()}).single('avatar'), async function(req, res) {
       const imgName = uuidv4();
-      db.none("INSERT INTO files(name, data) VALUES(${name}, ${data})", {name: imgName, data: req.file.buffer});
+      db.none("INSERT INTO files(name, data) VALUES($1, $2)", [imgName, req.file.buffer]);
       res.send({ imgUrl: 'uploads/' + imgName });
   })
     
