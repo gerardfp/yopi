@@ -31,34 +31,17 @@ const genId = (size, src) => {
   size = size ? size : 25;
   for(let i=0; i<size; i++){
     let id = uuidv4();
-     response.response.push({
-       id: id,
-       name: id.replace(/-/g, ' '),
-       shortname: id.replace(/-.*/, ''),
-       src: src({id: id}),
-       likes: 0
-     });
+    response.response.push({ id: id, name: id.replace(/-/g, ' '), shortname: id.replace(/-.*/, ''), src: src({id: id}), likes: 0 });
   }
   return response;
 }
 
 express()
-  .get('/robots/:size?', (req, res) => {
-    res.send(genId(req.params.size, template`https://robohash.org/${'id'}`));
-  })
-  .get('/monsters/:size?', (req, res) => {
-    res.send(genId(req.params.size, template`https://robohash.org/${'id'}?set=set2`));
-  })
-  .get('/kittens/:size?', (req, res) => {
-    res.send(genId(req.params.size, template`https://robohash.org/${'id'}?set=set4`));
-  })
-  .get('/humans/:size?', (req, res) => {
-    res.send(genId(req.params.size, template`https://robohash.org/${'id'}?set=set5`));
-  })
-
-  .get('/likes/:id?', (req, res) => {
-   res.send({ likes: Math.floor(Math.random()*2000 + 1)});
-  })
+  .get('/robots/:size?', (req, res) => { res.send(genId(req.params.size, template`https://robohash.org/${'id'}`));})
+  .get('/monsters/:size?', (req, res) => { res.send(genId(req.params.size, template`https://robohash.org/${'id'}?set=set2`));})
+  .get('/kittens/:size?', (req, res) => { res.send(genId(req.params.size, template`https://robohash.org/${'id'}?set=set4`));})
+  .get('/humans/:size?', (req, res) => { res.send(genId(req.params.size, template`https://robohash.org/${'id'}?set=set5`));})
+  .get('/likes/:id?', (req, res) => { res.send({ likes: Math.floor(Math.random()*2000 + 1)});})
 
   .post("/upload", multer.single('avatar'), async function(req, res) {
       const imgBuffer = req.file.buffer.toString('base64');
