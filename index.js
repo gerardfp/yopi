@@ -4,6 +4,7 @@ const multer = require('multer')
 
 const PORT = process.env.PORT || 5000
 
+fs.mkdir(path.join(__dirname, 'uploads'));
 
 // https://testimonialapi.toolcarton.com/api
 
