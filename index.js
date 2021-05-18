@@ -8,8 +8,6 @@ fs.mkdir(path.join(__dirname, 'uploads'));
 
 // https://testimonialapi.toolcarton.com/api
 
-
-
 function template(strings, ...keys) {
   return (function(...values) {
     let dict = values[values.length - 1] || {};
