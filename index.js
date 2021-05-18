@@ -3,11 +3,16 @@ const { v4: uuidv4,} = require('uuid');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const promise = require('bluebird');
+const db = require('pg-promise')({ promiseLib: promise })({ connectionString: process.env.DATABASE_URL || 'postgresql://user:pass@localhost:5432/dbname',
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false });
 
 const PORT = process.env.PORT || 5000
 
+db.none("CREATE TABLE IF NOT EXISTS files (name text, data BYTEA)");
 
 // https://testimonialapi.toolcarton.com/api
+
 
 function template(strings, ...keys) {
   return (function(...values) {
@@ -55,22 +60,17 @@ express()
    res.send({ likes: Math.floor(Math.random()*2000 + 1)});
   })
 
-  .post("/upload", 
-    multer({storage:  multer.diskStorage({
-      destination: (req, file, cb) => cb(null, './uploads/'),
-      filename: (req, file, cb) => cb(null, uuidv4())
-    })}).single('avatar'), function(req, res) {
-      // res.redirect("/uploads/" + req.file.filename);
-      console.log(req.file);
-      res.send({ imgUrl: req.file.path });
-    })
+  .post("/upload", multer.single('avatar'), async function(req, res) {
+      const imgBuffer = req.file.buffer.toString('base64');
+      const imgName = uuidv4();
+      db.none("INSERT INTO files(name, data) VALUES(${name}, ${data}", {name: imgName, data: imgBuffer});
+      res.send({ imgUrl: 'uploads/'+imgName });
+  })
     
-    .get('/uploads/:upload', function (req, res){
-      file = req.params.upload;
-      console.log(req.params.upload);
-      var img = fs.readFileSync(__dirname + "/uploads/" + file);
-      res.writeHead(200, {'Content-Type': 'image/png' });
-      res.end(img, 'binary');
-    })
+  .get('/uploads/:upload', async function (req, res){
+    const data = await db.any("SELECT data FROM files where name = ${name}", {name: req.params.upload});
+    res.writeHead(200, {'Content-Type': 'image/png' });
+    res.end(data, 'binary');
+  })
 
-   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
