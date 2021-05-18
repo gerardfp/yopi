@@ -58,7 +58,7 @@ express()
     filename: (req, file, cb) => cb(null, uuidv4())
   })}).single('avatar'), function(req, res) {
       // res.redirect("/uploads/" + req.file.filename);
-      console.log(req.files);
+      console.log(req.file);
       return res.status(200).end();
     })
     
