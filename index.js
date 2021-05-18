@@ -1,6 +1,8 @@
 const express = require('express');
 const { v4: uuidv4,} = require('uuid');
 const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const PORT = process.env.PORT || 5000
 
