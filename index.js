@@ -52,7 +52,7 @@ express()
   })
     
   .get('/uploads/:upload', async function (req, res){
-    const data = await db.any("SELECT data FROM files where name = ${name}", {name: req.params.upload});
+    const data = await db.any("SELECT encode(data,'base64') FROM files where name = ${name}", {name: req.params.upload});
     res.writeHead(200, {'Content-Type': 'image/png', 'Content-Length': data.length });
     res.end(data);
   })
