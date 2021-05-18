@@ -69,23 +69,18 @@ express()
    res.send({ likes: Math.floor(Math.random()*2000 + 1)});
   })
 
-  .post("/upload", multer({
-    storage: storage
-    }).single('upload'), function(req, res) {
-      console.log(req.file);
-      console.log(req.body);
-      res.redirect("/uploads/" + req.file.filename);
+  .post("/upload", multer({storage: storage}).single('avatar'), function(req, res) {
+      // res.redirect("/uploads/" + req.file.filename);
       console.log(req.file.filename);
       return res.status(200).end();
     })
     
     .get('/uploads/:upload', function (req, res){
-    file = req.params.upload;
-    console.log(req.params.upload);
-    var img = fs.readFileSync(__dirname + "/uploads/" + file);
-    res.writeHead(200, {'Content-Type': 'image/png' });
-    res.end(img, 'binary');
-    
+      file = req.params.upload;
+      console.log(req.params.upload);
+      var img = fs.readFileSync(__dirname + "/uploads/" + file);
+      res.writeHead(200, {'Content-Type': 'image/png' });
+      res.end(img, 'binary');
     })
 
    .listen(PORT, () => console.log(`Listening on ${ PORT }`))
