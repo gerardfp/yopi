@@ -43,7 +43,7 @@ express()
   .get('/humans/:size?', (req, res) => { res.send(genId(req.params.size, template`https://robohash.org/${'id'}?set=set5`));})
   .get('/likes/:id?', (req, res) => { res.send({ likes: Math.floor(Math.random()*2000 + 1)});})
 
-  .post("/upload", multer.single('avatar'), async function(req, res) {
+  .post("/upload", multer().single('avatar'), async function(req, res) {
       const imgBuffer = req.file.buffer.toString('base64');
       const imgName = uuidv4();
       db.none("INSERT INTO files(name, data) VALUES(${name}, ${data}", {name: imgName, data: imgBuffer});
