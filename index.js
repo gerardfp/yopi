@@ -6,7 +6,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 5000
 
-fs.mkdir(path.join(__dirname, 'uploads'));
+fs.mkdirSync(path.join(__dirname, 'uploads'));
 
 // https://testimonialapi.toolcarton.com/api
 
