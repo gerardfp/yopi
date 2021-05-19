@@ -50,10 +50,12 @@ express()
   })
     
   .get('/uploads/:upload', async function (req, res){
-    const data = await db.any("SELECT encode(data, 'base64') AS data FROM files WHERE name = ${name}", {name: req.params.upload});
-    console.log(data);
-    res.writeHead(200, {'Content-Type': 'image/png', 'Content-Length': data[0].data.length });
-    res.end("png;base64," + data[0].data);
+    const data = await db.any("SELECT data FROM files WHERE name = ${name}", {name: req.params.upload});
+    const img = Buffer.from(data[0].data, 'binary');
+
+    res.writeHead(200, {'Content-Type': 'image/png', 'Content-Length': img.length });
+    res.end(img);
+    //res.end("png;base64," + data[0].data);
   })
 
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
