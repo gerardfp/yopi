@@ -3,7 +3,7 @@
     <label for="avatar">Upload image...</label>
 </form>
 <div style="display: flex">
-<% files.forEach(function(files){ %>
+<% files.forEach(function(file){ %>
     <img style="width: 5em" src="uploads/<%= file.name %>">
 <% }); %>
 </div>
