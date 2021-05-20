@@ -26,6 +26,18 @@ express()
     res.end(img);
   })
 
+  .get('/', async function(req, res){
+    const files = await db.any("SELECT name FROM files");
+
+    let output = '<div style="display: flex">';
+    for(let file of files) {
+      output += `<img src="uploads/${file.name}>`;
+    }
+    output += "</div>";
+
+    res.send(output);
+  })
+
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
 
