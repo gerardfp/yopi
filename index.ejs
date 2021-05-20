@@ -1,0 +1,9 @@
+<form id="upload-form" enctype="multipart/form-data" method="POST">
+    <input id="avatar" name="avatar" type="file" style="display:none" onchange="document.getElementById('upload-form').submit()"/>
+    <label for="avatar">Upload image...</label>
+</form>
+<div style="display: flex">
+<% files.forEach(function(files){ %>
+    <img style="width: 5em" src="uploads/<%= file.name %>">
+<% }); %>
+</div>

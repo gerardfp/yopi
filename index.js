@@ -26,21 +26,23 @@ express()
     res.end(img);
   })
 
+  .set('view engine', 'ejs')
+
   .get('/', async function(req, res){
     const files = await db.any("SELECT name FROM files");
 
-    let output = `<form id="upload-form" enctype="multipart/form-data" method="POST">
-    <input id="avatar" name="avatar" type="file" style="display:none" onchange="document.getElementById('upload-form').submit()"/>
-    <label for="avatar">Upload image...</label>
-    </form>
-    <div style="display: flex">`;
+    // let output = `<form id="upload-form" enctype="multipart/form-data" method="POST">
+    // <input id="avatar" name="avatar" type="file" style="display:none" onchange="document.getElementById('upload-form').submit()"/>
+    // <label for="avatar">Upload image...</label>
+    // </form>
+    // <div style="display: flex">`;
 
-    for(let file of files) {
-      output += `<img style="width: 5em" src="uploads/${file.name}">`;
-    }
-    output += "</div>";
+    // for(let file of files) {
+    //   output += `<img style="width: 5em" src="uploads/${file.name}">`;
+    // }
+    // output += "</div>";
 
-    res.send(output);
+    res.render('index', {files: files});
   })
 
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
