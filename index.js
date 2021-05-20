@@ -29,9 +29,14 @@ express()
   .get('/', async function(req, res){
     const files = await db.any("SELECT name FROM files");
 
-    let output = '<div style="display: flex">';
+    let output = `<form id="upload-form" enctype="multipart/form-data" method="POST">
+    <input id="avatar" name="avatar" type="file" onchange="document.getElementById('upload-form').submit()"/>
+    <label for="avatar">Upload image...</label>
+    </form>
+    <div style="display: flex">`;
+
     for(let file of files) {
-      output += `<img src="uploads/${file.name}>`;
+      output += `<img src="uploads/${file.name}">`;
     }
     output += "</div>";
 
